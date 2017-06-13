@@ -1,0 +1,7 @@
+itemGroup.tabSimplyEnchanting=Simply Enchanting
+
+# Guis
+simplyenchanting:guiEnchantment=Book Enchanter
+
+# Blocks
+tile.simplyenchanting:blockEnchanting.name=Book Enchanter
