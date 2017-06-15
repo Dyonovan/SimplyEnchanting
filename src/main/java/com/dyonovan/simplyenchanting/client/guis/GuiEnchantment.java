@@ -7,6 +7,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -23,9 +24,14 @@ import org.lwjgl.opengl.GL12;
  */
 public class GuiEnchantment extends GuiContainer {
 
-    public GuiEnchantment(ContainerEnchantment inventorySlotsIn) {
+    ContainerEnchantment container;
+    EntityPlayer player;
+
+    public GuiEnchantment(ContainerEnchantment inventorySlotsIn, EntityPlayer player) {
         super(inventorySlotsIn);
 
+        this.container = inventorySlotsIn;
+        this.player = player;
         this.xSize = 175;
         this.ySize = 165;
     }
@@ -60,5 +66,11 @@ public class GuiEnchantment extends GuiContainer {
         int strWidth = this.fontRendererObj.getStringWidth(title);
         int displayPos = xSize / 2 - (strWidth / 2);
         this.fontRendererObj.drawString(title, displayPos, 3, 4210752);
+
+        if (container.eLevel > 0 && !player.isCreative()) {
+            String exp = I18n.format("simplyenchanting:expRequired") + ": " + container.eLevel * container.XP_MODIFIER;
+            int color = player.experienceTotal >= container.eLevel * container.XP_MODIFIER ? 65280 : 16711680;
+            this.fontRendererObj.drawString(exp, xSize / 2 - (this.fontRendererObj.getStringWidth(exp) / 2), 35, color);
+        }
     }
 }

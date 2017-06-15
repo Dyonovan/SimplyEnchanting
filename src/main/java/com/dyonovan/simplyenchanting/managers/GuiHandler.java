@@ -42,7 +42,7 @@ public class GuiHandler implements IGuiHandler {
         if (ID == ENCHANTMENT_GUI) {
             if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEnchantment) {
                 TileEnchantment tile = (TileEnchantment) world.getTileEntity(new BlockPos(x, y, z));
-                return new GuiEnchantment(new ContainerEnchantment(player, tile));
+                return new GuiEnchantment(new ContainerEnchantment(player, tile), player);
             }
         }
         return null;

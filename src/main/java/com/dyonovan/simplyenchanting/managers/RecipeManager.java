@@ -32,8 +32,6 @@ public class RecipeManager {
 
         if (!loadFromFile())
             generateDefaults();
-
-
     }
 
     private static boolean loadFromFile() {

@@ -1,12 +1,16 @@
 package com.dyonovan.simplyenchanting.common.Containers;
 
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
+import com.dyonovan.simplyenchanting.lib.EnchantmentRecipe;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This file was created for SimplyEnchanting
@@ -20,14 +24,19 @@ import net.minecraft.world.World;
  */
 public class ContainerEnchantment extends Container {
 
-    public IInventory enchantInventory;
-    private TileEnchantment tile;
+    public final int XP_MODIFIER = 10;
+    private final int LAPIS_MODIFIER = 8;
+
+
+    public int eLevel = 0;
+    private boolean running = false;
+    private IInventory enchantInventory;
     private final World world;
 
     public ContainerEnchantment(EntityPlayer player, TileEnchantment tile) {
 
         this.world = player.getEntityWorld();
-        this.tile = tile;
+        //this.tile = tile;
 
         this.enchantInventory = new InventoryBasic("CustomEnchantBook", true, 4) {
             @Override
@@ -88,14 +97,70 @@ public class ContainerEnchantment extends Container {
     }
 
     private void broadcastData(IContainerListener crafting) {
+        crafting.sendProgressBarUpdate(this, 0, this.eLevel);
+    }
 
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        //onCraftMatrixChanged(enchantInventory);
+        for (IContainerListener icontainerlistener : this.listeners) {
+            this.broadcastData(icontainerlistener);
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data) {
+        switch (id) {
+            case 0:
+                this.eLevel = data;
+                break;
+        }
     }
 
     @Override
     public void onCraftMatrixChanged(IInventory inventory) {
-        if (!inventory.getStackInSlot(0).isEmpty() && !!inventory.getStackInSlot(1).isEmpty() && !!inventory.getStackInSlot(2).isEmpty()) {
-
+        if (!inventory.getStackInSlot(0).isEmpty() && !inventory.getStackInSlot(1).isEmpty() && !inventory.getStackInSlot(2).isEmpty() && inventory.getStackInSlot(3).isEmpty() && !running) {
+            EnchantmentRecipe recipe = RecipeManager.isItemValid(inventory.getStackInSlot(0));
+            eLevel = Math.min(Math.min(recipe.eMaxLevel, inventory.getStackInSlot(0).getCount()), inventory.getStackInSlot(1).getCount() / LAPIS_MODIFIER);
+            if (eLevel > 0) {
+                ItemStack itemstack = new ItemStack(Items.ENCHANTED_BOOK);
+                Enchantment enchant = Enchantment.getEnchantmentByLocation(recipe.eName);
+                itemstack.addEnchantment(enchant, eLevel);
+                this.enchantInventory.setInventorySlotContents(3, itemstack);
+            } else
+                reset();
         }
+
+        if ((inventory.getStackInSlot(0).isEmpty() || inventory.getStackInSlot(1).isEmpty() || inventory.getStackInSlot(2).isEmpty() || inventory.getStackInSlot(1).getCount() < LAPIS_MODIFIER)
+                && !inventory.getStackInSlot(3).isEmpty() && !running) {
+            reset();
+        }
+    }
+
+    private void reset() {
+        enchantInventory.removeStackFromSlot(3);
+        eLevel = 0;
+    }
+
+    @Override
+    public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
+        if (slotId == 3 && !enchantInventory.getStackInSlot(3).isEmpty() && player.inventory.getItemStack().isEmpty()) {
+            if ((player.experienceTotal < (eLevel * XP_MODIFIER)) && !player.isCreative())
+                return ItemStack.EMPTY;
+
+            this.running = true;
+            if (!player.isCreative())
+                player.removeExperienceLevel(eLevel * XP_MODIFIER);
+            enchantInventory.decrStackSize(0, eLevel);
+            enchantInventory.decrStackSize(1, eLevel * LAPIS_MODIFIER);
+            enchantInventory.decrStackSize(2, 1);
+            this.running = false;
+        } else if (slotId == 0)
+            reset();
+        ItemStack item = super.slotClick(slotId, dragType, clickTypeIn, player);
+        onCraftMatrixChanged(enchantInventory);
+        return item;
     }
 
     @Override
@@ -109,7 +174,7 @@ public class ContainerEnchantment extends Container {
 
         if (!this.world.isRemote)
         {
-            for (int i = 0; i < this.enchantInventory.getSizeInventory(); ++i)
+            for (int i = 0; i < this.enchantInventory.getSizeInventory() - 1; ++i)
             {
                 ItemStack itemstack = this.enchantInventory.removeStackFromSlot(i);
 
@@ -135,9 +200,6 @@ public class ContainerEnchantment extends Container {
                     return ItemStack.EMPTY;
             } else if(!mergeItemStack(itemToTransfer, 0, getInventorySizeNotPlayer(), false))
                 return ItemStack.EMPTY;
-
-            /*if(itemToTransfer.getCount() == 0)
-                slot.putStack(ItemStack.EMPTY);*/
             else
                 slot.onSlotChanged();
 
