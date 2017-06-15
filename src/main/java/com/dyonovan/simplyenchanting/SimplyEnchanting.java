@@ -4,17 +4,20 @@ import com.dyonovan.simplyenchanting.common.CommonProxy;
 import com.dyonovan.simplyenchanting.lib.Reference;
 import com.dyonovan.simplyenchanting.managers.BlockManager;
 import com.dyonovan.simplyenchanting.managers.ConfigManager;
+import com.dyonovan.simplyenchanting.managers.GuiHandler;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +27,9 @@ import java.io.File;
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = Reference.DEPENDENCIES)
 public class SimplyEnchanting
 {
+
+    @Instance
+    public static SimplyEnchanting INSTANCE;
 
     //The logger. For logging
     public static final Logger logger = LogManager.getLogger(Reference.MOD_NAME);
@@ -57,6 +63,7 @@ public class SimplyEnchanting
     public void init(FMLInitializationEvent event)
     {
         proxy.init();
+        NetworkRegistry.INSTANCE.registerGuiHandler(INSTANCE, new GuiHandler());
     }
 
     @EventHandler

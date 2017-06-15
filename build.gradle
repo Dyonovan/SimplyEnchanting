@@ -49,7 +49,7 @@ minecraft {
 }
 
 dependencies {
-    compile "com.teambr.bookshelf:Bookshelf-API:latest.release:dev"
+    //compile "com.teambr.bookshelf:Bookshelf-API:latest.release:dev"
 }
 
 processResources {

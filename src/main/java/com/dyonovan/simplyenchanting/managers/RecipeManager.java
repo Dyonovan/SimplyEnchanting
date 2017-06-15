@@ -1,14 +1,11 @@
 package com.dyonovan.simplyenchanting.managers;
 
 import com.dyonovan.simplyenchanting.SimplyEnchanting;
+import com.dyonovan.simplyenchanting.Utils.JsonUtils;
 import com.dyonovan.simplyenchanting.lib.EnchantmentRecipe;
 import com.google.gson.reflect.TypeToken;
-import com.teambr.bookshelf.helper.LogHelper;
-import com.teambr.bookshelf.util.JsonUtils;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -40,7 +37,7 @@ public class RecipeManager {
     }
 
     private static boolean loadFromFile() {
-        LogHelper.logger.info("[SimplyEnchanting] Loading Enchantment json...");
+        SimplyEnchanting.logger.info("[SimplyEnchanting] Loading Enchantment json...");
         enchantmentRecipes = JsonUtils.readFromJson(getTypeToken(), SimplyEnchanting.configFolderLocation + File.separator + "recipes.json");
         if (enchantmentRecipes == null)
             enchantmentRecipes = new ArrayList<>();

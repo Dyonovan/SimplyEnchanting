@@ -1,11 +1,13 @@
 package com.dyonovan.simplyenchanting.common.tiles;
 
-import com.dyonovan.simplyenchanting.managers.RecipeManager;
-import com.teambr.bookshelf.common.tiles.InventoryHandler;
+import com.dyonovan.simplyenchanting.managers.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IInteractionObject;
 
 import java.util.Random;
 
@@ -19,12 +21,7 @@ import java.util.Random;
  * @author Dyonovan
  * @since 6/11/2017
  */
-public class TileEnchantment extends InventoryHandler {
-
-    public final int ITEM_SLOT = 0;
-    public final int LAPIS_SLOT = 1;
-    public final int BOOK_SLOT = 2;
-    public final int OUTPUT_SLOT = 3;
+public class TileEnchantment extends TileEntity implements ITickable {
 
     public int tickCount;
     public float pageFlip;
@@ -105,35 +102,5 @@ public class TileEnchantment extends InventoryHandler {
         f = MathHelper.clamp(f, -0.2F, 0.2F);
         this.flipA += (f - this.flipA) * 0.9F;
         this.pageFlip += this.flipA;
-    }
-
-    @Override
-    protected int getInventorySize() {
-        return 4;
-    }
-
-    @Override
-    protected boolean isItemValidForSlot(int index, ItemStack stack) {
-        switch (index) {
-            case 0:
-                return RecipeManager.isItemValid(stack) != null;
-            case 1:
-                return stack.isItemEqual(new ItemStack(Items.DYE, 1, 4));
-            case 2:
-                return stack.isItemEqual(new ItemStack(Items.BOOK));
-            default:
-                return false;
-
-        }
-    }
-
-    @Override
-    public void setVariable(int id, double value) {
-
-    }
-
-    @Override
-    public Double getVariable(int id) {
-        return null;
     }
 }

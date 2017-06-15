@@ -2,18 +2,11 @@ package com.dyonovan.simplyenchanting.common.Containers;
 
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
-import com.teambr.bookshelf.common.container.BaseContainer;
-import com.teambr.bookshelf.util.WorldUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * This file was created for SimplyEnchanting
@@ -25,17 +18,16 @@ import net.minecraftforge.items.SlotItemHandler;
  * @author Dyonovan
  * @since 6/11/2017
  */
-public class ContainerEnchantment extends BaseContainer {
+public class ContainerEnchantment extends Container {
 
     public IInventory enchantInventory;
     private TileEnchantment tile;
     private final World world;
 
-    public ContainerEnchantment(EntityPlayer player, TileEnchantment inventory) {
-        super(player.inventory, inventory);
+    public ContainerEnchantment(EntityPlayer player, TileEnchantment tile) {
 
         this.world = player.getEntityWorld();
-        this.tile = inventory;
+        this.tile = tile;
 
         this.enchantInventory = new InventoryBasic("CustomEnchantBook", true, 4) {
             @Override
@@ -52,32 +44,41 @@ public class ContainerEnchantment extends BaseContainer {
             }
         };
 
-        addSlotToContainer(new Slot(enchantInventory, inventory.ITEM_SLOT, 31, 13) {
+        addSlotToContainer(new Slot(enchantInventory, 0, 31, 13) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return RecipeManager.isItemValid(stack) != null;
             }
         });
-        addSlotToContainer(new Slot(enchantInventory, inventory.LAPIS_SLOT, 80, 13) {
+        addSlotToContainer(new Slot(enchantInventory, 1, 80, 13) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack.isItemEqual(new ItemStack(Items.DYE, 1, 4));
             }
         });
-        addSlotToContainer(new Slot(enchantInventory, inventory.BOOK_SLOT, 129, 13) {
+        addSlotToContainer(new Slot(enchantInventory, 2, 129, 13) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return stack.isItemEqual(new ItemStack(Items.BOOK));
             }
         });
-        addSlotToContainer(new Slot(enchantInventory, inventory.OUTPUT_SLOT, 80, 49) {
+        addSlotToContainer(new Slot(enchantInventory, 3, 80, 49) {
             @Override
             public boolean isItemValid(ItemStack stack) {
                 return false;
             }
         });
 
-        addPlayerInventorySlots(84);
+        for(int row = 0; row < 3; row++) {
+            for(int column = 0; column < 9; column++)
+                addSlotToContainer(new Slot(player.inventory,
+                        column + row * 9 + 9,
+                        8 + column * 18,
+                        84 + row * 18));
+        }
+
+        for(int slot = 0; slot < 9; slot++)
+            addSlotToContainer(new Slot(player.inventory, slot, 8 + slot * 18, 84 + 58));
     }
 
     @Override
@@ -93,8 +94,13 @@ public class ContainerEnchantment extends BaseContainer {
     @Override
     public void onCraftMatrixChanged(IInventory inventory) {
         if (!inventory.getStackInSlot(0).isEmpty() && !!inventory.getStackInSlot(1).isEmpty() && !!inventory.getStackInSlot(2).isEmpty()) {
-            
+
         }
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return true;
     }
 
     @Override
@@ -115,22 +121,33 @@ public class ContainerEnchantment extends BaseContainer {
         }
     }
 
-    /*@Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int slotId) {
-        Slot slot = inventorySlots.get(slotId);
-        if (slot != null && slot.getHasStack()) {
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        if(index < 0 || index > inventorySlots.size())
+            return super.transferStackInSlot(playerIn, index);
+        Slot slot = inventorySlots.get(index);
+        if(slot != null && slot.getHasStack()) {
             ItemStack itemToTransfer = slot.getStack();
             ItemStack copy = itemToTransfer.copy();
-            if (slotId < inventorySize)
-                if (!mergeItemStack(itemToTransfer, inventorySize, inventorySlots.size(), true)) return null;
-            else if (!mergeItemStack(itemToTransfer, 0, inventorySize, false))
-                return null;
-            slot.onSlotChanged();
-            if (itemToTransfer.getCount() != copy.getCount()) {
-                slot.onTake(player, copy);
+
+            if(index < getInventorySizeNotPlayer()) {
+                if (!mergeItemStack(itemToTransfer, getInventorySizeNotPlayer(), inventorySlots.size(), true))
+                    return ItemStack.EMPTY;
+            } else if(!mergeItemStack(itemToTransfer, 0, getInventorySizeNotPlayer(), false))
+                return ItemStack.EMPTY;
+
+            /*if(itemToTransfer.getCount() == 0)
+                slot.putStack(ItemStack.EMPTY);*/
+            else
+                slot.onSlotChanged();
+
+            if(itemToTransfer.getCount() != copy.getCount())
                 return copy;
-            }
         }
-        return null;
-    }*/
+        return ItemStack.EMPTY;
+    }
+
+    private int getInventorySizeNotPlayer() {
+        return 4;
+    }
 }

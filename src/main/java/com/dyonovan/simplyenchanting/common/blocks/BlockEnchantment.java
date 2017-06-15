@@ -1,26 +1,18 @@
 package com.dyonovan.simplyenchanting.common.blocks;
 
 import com.dyonovan.simplyenchanting.SimplyEnchanting;
-import com.dyonovan.simplyenchanting.client.guis.GuiEnchantment;
-import com.dyonovan.simplyenchanting.common.Containers.ContainerEnchantment;
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
 import com.dyonovan.simplyenchanting.lib.Reference;
-import com.teambr.bookshelf.Bookshelf;
-import com.teambr.bookshelf.common.IOpensGui;
-import com.teambr.bookshelf.util.WorldUtils;
+import com.dyonovan.simplyenchanting.managers.GuiHandler;
 import net.minecraft.block.BlockEnchantmentTable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.IItemHandler;
 
 /**
  * This file was created for SimplyEnchanting
@@ -32,7 +24,7 @@ import net.minecraftforge.items.IItemHandler;
  * @author Dyonovan
  * @since 6/11/2017
  */
-public class BlockEnchantment extends BlockEnchantmentTable implements IOpensGui {
+public class BlockEnchantment extends BlockEnchantmentTable {
 
     public BlockEnchantment() {
         super();
@@ -51,27 +43,9 @@ public class BlockEnchantment extends BlockEnchantmentTable implements IOpensGui
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-        if (!playerIn.isSneaking()) {
-            playerIn.openGui(Bookshelf.INSTANCE, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (!playerIn.isSneaking() && !worldIn.isRemote) {
+            playerIn.openGui(SimplyEnchanting.INSTANCE, GuiHandler.ENCHANTMENT_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
-    }
-
-    @Override
-    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEnchantment) {
-            TileEnchantment tileEnchantment = (TileEnchantment) world.getTileEntity(new BlockPos(x, y, z));
-            return new ContainerEnchantment(player, tileEnchantment);
-        }
-        return null;
-    }
-
-    @Override
-    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
-        if (world.getTileEntity(new BlockPos(x, y, z)) instanceof TileEnchantment) {
-            TileEnchantment tileEnchantment = (TileEnchantment) world.getTileEntity(new BlockPos(x, y, z));
-            return new GuiEnchantment(new ContainerEnchantment(player, tileEnchantment), 175, 165, "simplyenchanting:guiEnchantment", new ResourceLocation(Reference.MOD_ID, "textures/gui/guienchanting.png"));
-        }
-        return null;
     }
 }
