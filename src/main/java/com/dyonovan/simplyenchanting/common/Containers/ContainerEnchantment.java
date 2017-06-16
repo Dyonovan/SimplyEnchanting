@@ -152,7 +152,7 @@ public class ContainerEnchantment extends Container {
 
             this.running = true;
             if (!player.isCreative())
-                player.removeExperienceLevel(eLevel * XP_MODIFIER);
+                player.addExperienceLevel((eLevel * XP_MODIFIER) * (-1)); //removeExperienceLevel(eLevel * XP_MODIFIER);
             enchantInventory.decrStackSize(0, eLevel);
             enchantInventory.decrStackSize(1, eLevel * LAPIS_MODIFIER);
             enchantInventory.decrStackSize(2, 1);
