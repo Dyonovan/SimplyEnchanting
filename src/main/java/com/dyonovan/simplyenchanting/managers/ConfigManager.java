@@ -20,11 +20,15 @@ public class ConfigManager {
 
     public static Configuration config = new Configuration(new File(SimplyEnchanting.configFolderLocation + File.separator + Reference.MOD_ID + ".cfg"));
 
+    public static int lapisModifier;
+    public static int xpModifier;
+
     public static void preInit() {
-        /*File dir = new File(SimplyEnchanting.configFolderLocation);
-        if (!dir.exists())
-            dir.mkdir();*/
+
         config.load();
+
+        lapisModifier = config.getInt("Lapis Modifier", "Modifiers", 8, 1, 64, "Lapis required per Enchant Level");
+        xpModifier = config.getInt("XP Modifier", "Modifiers", 10, 1, 64, "XP Levels required per Enchant Level");
 
         config.save();
 

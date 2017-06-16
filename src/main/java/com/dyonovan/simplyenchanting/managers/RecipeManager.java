@@ -90,18 +90,39 @@ public class RecipeManager {
     public static EnchantmentRecipe isItemValid(ItemStack stack) {
         for (EnchantmentRecipe enchantmentRecipe : enchantmentRecipes) {
             List<String> itemString = Arrays.asList(enchantmentRecipe.eItem.split(":"));
-            Block block = Block.getBlockFromName(itemString.get(0) + ":" + itemString.get(1));
-            if (block != null) {
-                if (stack.isItemEqual(itemString.size() == 2 ? new ItemStack(block) : new ItemStack(block, 1, Integer.parseInt(itemString.get(2)))))
-                    return enchantmentRecipe;
-            }
             Item item = Item.getByNameOrId(itemString.get(0) + ":" + itemString.get(1));
             if (item != null) {
                 if (stack.isItemEqual(itemString.size() == 2 ? new ItemStack(item) : new ItemStack(item, 1, Integer.parseInt(itemString.get(2)))))
                     return enchantmentRecipe;
             }
+            Block block = Block.getBlockFromName(itemString.get(0) + ":" + itemString.get(1));
+            if (block != null) {
+                if (stack.isItemEqual(itemString.size() == 2 ? new ItemStack(block) : new ItemStack(block, 1, Integer.parseInt(itemString.get(2)))))
+                    return enchantmentRecipe;
+            }
         }
         return null;
+    }
+
+    public static ItemStack getItemStack(String itemIn) {
+        List<String> itemString = Arrays.asList(itemIn.split(":"));
+        Item item = Item.getByNameOrId(itemString.get(0) + ":" + itemString.get(1));
+        if (item != null) {
+            if (itemString.size() == 2)
+                return new ItemStack(item);
+            else
+                return new ItemStack(item, 1, Integer.parseInt(itemString.get(2)));
+        }
+        Block block = Block.getBlockFromName(itemString.get(0) + ":" + itemString.get(1));
+        if (block != null) {
+            if (itemString.size() == 2)
+                return new ItemStack(block);
+            else
+                return new ItemStack(block, 1, Integer.parseInt(itemString.get(2)));
+        }
+
+
+        return ItemStack.EMPTY;
     }
 
 }

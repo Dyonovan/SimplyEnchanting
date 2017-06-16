@@ -13,8 +13,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 repositories {
     maven {
-        name 'BR Repo'
-        url 'http://dyonovan.com/maven2'
+        name 'DVS1 Maven FS'
+        url 'http://dvs1.progwml6.com/files/maven'
     }
 }
 ext.configFile = file "gradle.properties"
@@ -50,6 +50,7 @@ minecraft {
 
 dependencies {
     //compile "com.teambr.bookshelf:Bookshelf-API:latest.release:dev"
+    deobfCompile "mezz.jei:jei_${config.minecraft_version}:${config.JEI_version}"
 }
 
 processResources {

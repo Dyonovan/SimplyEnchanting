@@ -2,6 +2,7 @@ package com.dyonovan.simplyenchanting.common.Containers;
 
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
 import com.dyonovan.simplyenchanting.lib.EnchantmentRecipe;
+import com.dyonovan.simplyenchanting.managers.ConfigManager;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,8 +25,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class ContainerEnchantment extends Container {
 
-    public final int XP_MODIFIER = 10;
-    private final int LAPIS_MODIFIER = 8;
+    public final int XP_MODIFIER = ConfigManager.xpModifier;
+    private final int LAPIS_MODIFIER = ConfigManager.lapisModifier;
 
 
     public int eLevel = 0;

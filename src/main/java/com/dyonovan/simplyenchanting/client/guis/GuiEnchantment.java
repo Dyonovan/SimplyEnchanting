@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -47,8 +48,12 @@ public class GuiEnchantment extends GuiContainer {
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GlStateManager.translate(guiLeft, guiTop, 0);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture( new ResourceLocation(Reference.MOD_ID, "textures/gui/guienchanting.png"));
+        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(Reference.MOD_ID, "textures/gui/guienchanting.png"));
         drawTexturedModalRect(0, 0, 0, 0, xSize + 1, ySize + 1);
+
+        if (Loader.isModLoaded("jei")) {
+            drawTexturedModalRect(155, 5, 222, 0, 16, 16);
+        }
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
@@ -72,5 +77,7 @@ public class GuiEnchantment extends GuiContainer {
             int color = player.experienceTotal >= container.eLevel * container.XP_MODIFIER ? 65280 : 16711680;
             this.fontRendererObj.drawString(exp, xSize / 2 - (this.fontRendererObj.getStringWidth(exp) / 2), 35, color);
         }
+
+
     }
 }
