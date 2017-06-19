@@ -7,8 +7,13 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.0.8"
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
 
 
 repositories {
@@ -22,6 +27,11 @@ configFile.withReader {
     def prop = new Properties()
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
+}
+
+String APIToken = ''
+if (file('APIToken').exists()) {
+    APIToken = new File('APIToken').text
 }
 
 String build = ""
@@ -69,5 +79,15 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+curseforge {
+    apiKey = APIToken
+    project {
+        id = '269948'
+        changelog = 'Fixed Enchanted Books not working in Anvil'
+        releaseType = 'release'
+        addGameVersion '1.11.2'
     }
 }

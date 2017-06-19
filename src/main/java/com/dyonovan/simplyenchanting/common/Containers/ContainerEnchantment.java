@@ -5,6 +5,7 @@ import com.dyonovan.simplyenchanting.lib.EnchantmentRecipe;
 import com.dyonovan.simplyenchanting.managers.ConfigManager;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
@@ -127,7 +128,8 @@ public class ContainerEnchantment extends Container {
             if (eLevel > 0) {
                 ItemStack itemstack = new ItemStack(Items.ENCHANTED_BOOK);
                 Enchantment enchant = Enchantment.getEnchantmentByLocation(recipe.eName);
-                itemstack.addEnchantment(enchant, eLevel);
+                //itemstack.addEnchantment(enchant, eLevel);
+                Items.ENCHANTED_BOOK.addEnchantment(itemstack, new EnchantmentData(enchant, eLevel));
                 this.enchantInventory.setInventorySlotContents(3, itemstack);
             } else
                 reset();
