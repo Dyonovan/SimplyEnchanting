@@ -1,7 +1,7 @@
 package com.dyonovan.simplyenchanting.managers;
 
 import com.dyonovan.simplyenchanting.client.guis.GuiEnchantment;
-import com.dyonovan.simplyenchanting.common.Containers.ContainerEnchantment;
+import com.dyonovan.simplyenchanting.common.containers.ContainerEnchantment;
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;

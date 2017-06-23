@@ -2,10 +2,7 @@ package com.dyonovan.simplyenchanting;
 
 import com.dyonovan.simplyenchanting.common.CommonProxy;
 import com.dyonovan.simplyenchanting.lib.Reference;
-import com.dyonovan.simplyenchanting.managers.BlockManager;
-import com.dyonovan.simplyenchanting.managers.ConfigManager;
-import com.dyonovan.simplyenchanting.managers.GuiHandler;
-import com.dyonovan.simplyenchanting.managers.RecipeManager;
+import com.dyonovan.simplyenchanting.managers.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -55,6 +52,7 @@ public class SimplyEnchanting
         ConfigManager.preInit();
         BlockManager.preInit();
         RecipeManager.preInit();
+        CraftingManager.preInit();
 
         proxy.preInit();
     }

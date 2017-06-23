@@ -48,7 +48,7 @@ public class EnchanterRecipeWrapper extends BlankRecipeWrapper {
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         String exp = I18n.format("simplyenchanting:expRequired") + ": " + xp;
-        minecraft.fontRendererObj.drawString(exp, 175 / 2 - (minecraft.fontRendererObj.getStringWidth(exp) / 2), 32, Color.gray.getRGB());
+        minecraft.fontRenderer.drawString(exp, 175 / 2 - (minecraft.fontRenderer.getStringWidth(exp) / 2), 32, Color.gray.getRGB());
     }
 
     boolean isValid() {

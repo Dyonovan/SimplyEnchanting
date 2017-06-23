@@ -1,6 +1,6 @@
 package com.dyonovan.simplyenchanting.client.guis;
 
-import com.dyonovan.simplyenchanting.common.Containers.ContainerEnchantment;
+import com.dyonovan.simplyenchanting.common.containers.ContainerEnchantment;
 import com.dyonovan.simplyenchanting.lib.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -38,6 +38,13 @@ public class GuiEnchantment extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.pushMatrix();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -68,14 +75,14 @@ public class GuiEnchantment extends GuiContainer {
     @Override
     public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         String title = I18n.format("simplyenchanting:guiEnchantment");
-        int strWidth = this.fontRendererObj.getStringWidth(title);
+        int strWidth = this.fontRenderer.getStringWidth(title);
         int displayPos = xSize / 2 - (strWidth / 2);
-        this.fontRendererObj.drawString(title, displayPos, 3, 4210752);
+        this.fontRenderer.drawString(title, displayPos, 3, 4210752);
 
         if (container.eLevel > 0 && !player.isCreative()) {
             String exp = I18n.format("simplyenchanting:expRequired") + ": " + container.eLevel * container.XP_MODIFIER;
-            int color = player.experienceTotal >= container.eLevel * container.XP_MODIFIER ? 65280 : 16711680;
-            this.fontRendererObj.drawString(exp, xSize / 2 - (this.fontRendererObj.getStringWidth(exp) / 2), 35, color);
+            int color = player.experienceLevel >= container.eLevel * container.XP_MODIFIER ? 65280 : 16711680;
+            this.fontRenderer.drawString(exp, xSize / 2 - (this.fontRenderer.getStringWidth(exp) / 2), 35, color);
         }
 
 

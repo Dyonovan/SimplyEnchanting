@@ -1,13 +1,15 @@
-package com.dyonovan.simplyenchanting.common.Containers;
+package com.dyonovan.simplyenchanting.common.containers;
 
 import com.dyonovan.simplyenchanting.common.tiles.TileEnchantment;
 import com.dyonovan.simplyenchanting.lib.EnchantmentRecipe;
 import com.dyonovan.simplyenchanting.managers.ConfigManager;
 import com.dyonovan.simplyenchanting.managers.RecipeManager;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -98,7 +100,7 @@ public class ContainerEnchantment extends Container {
     }
 
     private void broadcastData(IContainerListener crafting) {
-        crafting.sendProgressBarUpdate(this, 0, this.eLevel);
+        crafting.sendWindowProperty(this, 0, this.eLevel);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class ContainerEnchantment extends Container {
             if (eLevel > 0) {
                 ItemStack itemstack = new ItemStack(Items.ENCHANTED_BOOK);
                 Enchantment enchant = Enchantment.getEnchantmentByLocation(recipe.eName);
-                itemstack.addEnchantment(enchant, eLevel);
+                ItemEnchantedBook.addEnchantment(itemstack, new EnchantmentData(enchant, eLevel));
                 this.enchantInventory.setInventorySlotContents(3, itemstack);
             } else
                 reset();
@@ -147,7 +149,7 @@ public class ContainerEnchantment extends Container {
     @Override
     public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
         if (slotId == 3 && !enchantInventory.getStackInSlot(3).isEmpty() && player.inventory.getItemStack().isEmpty()) {
-            if ((player.experienceTotal < (eLevel * XP_MODIFIER)) && !player.isCreative())
+            if ((player.experienceLevel < (eLevel * XP_MODIFIER)) && !player.isCreative())
                 return ItemStack.EMPTY;
 
             this.running = true;
@@ -156,6 +158,7 @@ public class ContainerEnchantment extends Container {
             enchantInventory.decrStackSize(0, eLevel);
             enchantInventory.decrStackSize(1, eLevel * LAPIS_MODIFIER);
             enchantInventory.decrStackSize(2, 1);
+            eLevel = 0;
             this.running = false;
         } else if (slotId == 0)
             reset();

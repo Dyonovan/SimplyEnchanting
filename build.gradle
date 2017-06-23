@@ -7,6 +7,9 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+plugins {
+    id "com.matthewprenger.cursegradle" version "1.0.8"
+}
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
@@ -22,6 +25,10 @@ configFile.withReader {
     def prop = new Properties()
     prop.load(it)
     project.ext.config = new ConfigSlurper().parse prop
+}
+String APIToken = ''
+if (file('APIToken').exists()) {
+    APIToken = new File('APIToken').text
 }
 
 String build = ""
@@ -41,10 +48,10 @@ archivesBaseName = "SimplyEnchanting"
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "1.12-14.21.0.2321"
+    version = "1.12-14.21.0.2347"
     runDir = "run"
 
-    mappings = "snapshot_20161220"
+    mappings = "snapshot_20170617"
 
 }
 
@@ -69,5 +76,14 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+curseforge {
+    apiKey = APIToken
+    project {
+        id = '269948'
+        changelog = 'Initial 1.12 release'
+        releaseType = 'release'
+        addGameVersion '1.12'
     }
 }
