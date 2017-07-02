@@ -7,6 +7,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.registries.GameData;
 
 import javax.annotation.Nullable;
 
@@ -40,8 +41,8 @@ public class BlockManager {
                                                      @Nullable Class<? extends TileEntity> tileEntity,
                                                      @Nullable String oreDict) {
 
-        GameRegistry.register(block);
-        GameRegistry.register(itemBlock);
+        GameData.register_impl(block);
+        GameData.register_impl(itemBlock);
 
         if (tileEntity != null)
             GameRegistry.registerTileEntity(tileEntity, block.getRegistryName().toString());

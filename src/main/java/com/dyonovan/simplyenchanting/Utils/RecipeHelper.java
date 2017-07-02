@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.GameData;
 
 /*
  * Copyright (c) 2017 modmuss50 and Gigabit101
@@ -54,7 +55,7 @@ public class RecipeHelper {
         ResourceLocation location = getNameForRecipe(output);
         ShapedOreRecipe recipe = new ShapedOreRecipe(location, output, params);
         recipe.setRegistryName(location);
-        GameRegistry.register(recipe);
+        GameData.register_impl(recipe);
     }
 
     /**
@@ -67,7 +68,7 @@ public class RecipeHelper {
         CraftingHelper.ShapedPrimer primer = CraftingHelper.parseShaped(params);
         ShapedRecipes recipe = new ShapedRecipes(output.getItem().getRegistryName().toString(), primer.width, primer.height, primer.input, output);
         recipe.setRegistryName(location);
-        GameRegistry.register(recipe);
+        GameData.register_impl(recipe);
     }
 
     /**
@@ -79,7 +80,7 @@ public class RecipeHelper {
         ResourceLocation location = getNameForRecipe(output);
         ShapelessOreRecipe recipe = new ShapelessOreRecipe(location, output, input);
         recipe.setRegistryName(location);
-        GameRegistry.register(recipe);
+        GameData.register_impl(recipe);
     }
 
     /**
@@ -91,7 +92,7 @@ public class RecipeHelper {
         ResourceLocation location = getNameForRecipe(output);
         ShapelessRecipes recipe = new ShapelessRecipes(location.getResourceDomain(), output, buildInput(input));
         recipe.setRegistryName(location);
-        GameRegistry.register(recipe);
+        GameData.register_impl(recipe);
     }
 
     /**
